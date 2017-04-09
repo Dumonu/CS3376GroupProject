@@ -10,4 +10,4 @@
 # Jacob: server_functions.c zombie processes
 # Ryan: makefile and readme.txt
 # Devon: server_functions.c: datagram and stream socket connection
-# Henry: client.c comment it
+# Henry: client.c comment it, move common functions out
