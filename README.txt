@@ -10,3 +10,4 @@
 # Jacob: server_functions.c zombie processes
 # Ryan: makefile and readme.txt
 # Devon: client_functions.c: datagram and stream socket connection
+# Henry: nothing for first deliverable (so far)
