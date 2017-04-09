@@ -5,3 +5,8 @@
 # a. Continuous server that create a child process.
 # b. Handles zombie processes properly.
 # c. Accepts both UDP (datagram socket) and TCP (stream socket).
+# Adrian: client_functions.c: datagram and stream socket connection
+# Ian: server.c continous 
+# Jacob: server_functions.c zombie processes
+# Ryan: makefile and readme.txt
+# Devon: client_functions.c: datagram and stream socket connection
