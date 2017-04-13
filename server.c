@@ -26,9 +26,10 @@ void error(const char *);
 void dostuff(int sock);
 int main(int argc, char *argv[])
 {
-   int sockfd, newsockfd, servlen, pid; //n will contain the number of characters read/written by the socket
+	
+   int sockfd, newsockfd, servlen, pid, portno; //n will contain the number of characters read/written by the socket
    socklen_t clilen;
-   struct sockaddr_un  cli_addr, serv_addr; //sockaddr_un contains the address of the socket - different in unix
+   struct sockaddr_in  cli_addr, serv_addr; //sockaddr_un contains the address of the socket - different in unix
    
    //variables for select()
    fd_set readfds; //set containing file descriptors used for reading
@@ -44,40 +45,39 @@ int main(int argc, char *argv[])
 	
 	
 
-   if ((sockfd = socket(AF_UNIX,SOCK_STREAM,0)) < 0) //creates a socket with three arguments : address (unix version), what type (SOCK_STREAM, SOCK_DGRAM), protocol (default 0)
+   if ((sockfd = socket(AF_INET,SOCK_STREAM,0)) < 0) //creates a socket with three arguments : address (unix version), what type (SOCK_STREAM, SOCK_DGRAM), protocol (default 0)
        error("creating socket"); //prints error message if socket creation fails
    bzero((char *) &serv_addr, sizeof(serv_addr)); //sets all values in serv_addr buffer to zero
-   serv_addr.sun_family = AF_UNIX; //should always be set to AF_UNIX?
-   strcpy(serv_addr.sun_path, argv[1]); //copies first argument (a path name) from command line 
-   servlen=strlen(serv_addr.sun_path) + 
-                     sizeof(serv_addr.sun_family); //stores the length of the address in servlen, for use in bind()
+   portno = atoi(argv[1]);
+   serv_addr.sin_family = AF_INET; 
+   serv_addr.sin_addr.s_addr = INADDR_ANY; //copies first argument (a path name) from command line 
+   serv_addr.sin_port = htons(portno);
+
 					 
-   if(bind(sockfd,(struct sockaddr *)&serv_addr,servlen)<0) //binds socket to address, needs 3 arguments takes socket file descriptor (sockfd), 
+    if (bind(sockfd, (struct sockaddr *) &serv_addr,
+              sizeof(serv_addr)) < 0)  //binds socket to address, needs 3 arguments takes socket file descriptor (sockfd), 
 															//the address it is bound to is(?) cast to the type "sockaddr", and the length of the address
        error("binding socket"); 
 	  
    //UDP setup
-   int sock_UDP, length_UDP, n;
+   int sock_UDP, length_UDP, n, portno_UDP;
    socklen_t fromlen;
-   struct sockaddr_un server;
-   struct sockaddr_un from;
+   struct sockaddr_in server;
+   struct sockaddr_in from;
    char buf_UDP[1024];
+   portno_UDP = atoi(argv[2]);
 
-   if (argc < 3) {
-      fprintf(stderr, "ERROR, no address provided\n");
-      exit(0);
-   }
    
-   sock_UDP=socket(AF_UNIX, SOCK_DGRAM, 0);
+   sock_UDP=socket(AF_INET, SOCK_DGRAM, 0);
    if (sock_UDP < 0) error("Opening socket");
    length_UDP = sizeof(server);
    bzero(&server,length_UDP);
-   server.sun_family=AF_UNIX;
-//   server.sun_path=INADDR_ANY;
-   strcpy(serv_addr.sun_path, argv[2]);
+   server.sin_family=AF_INET;
+   serv_addr.sin_addr.s_addr = INADDR_ANY;
+   serv_addr.sin_port = htons(portno_UDP);
    if (bind(sock_UDP,(struct sockaddr *)&server,length_UDP)<0) 
        error("binding");
-   fromlen = sizeof(struct sockaddr_un);
+   fromlen = sizeof(struct sockaddr_in);
    
    
    //main loop, more select setup
