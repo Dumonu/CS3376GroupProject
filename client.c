@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
-
+// All of this code is the same as that in the server so we are commenting it out.
+/*
     char buffer[256];
     if (argc < 3) {
        fprintf(stderr,"usage %s hostname port\n", argv[0]);
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
 	// Make sure the socket has been opened
     if (sockfd < 0) 
         error("ERROR opening socket");
+*/
 	// The variable argv[1] contains the name of a host on the internet
     server = gethostbyname(argv[1]);
     if (server == NULL) {
