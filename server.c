@@ -3,11 +3,13 @@
 // date: 4/11/2017
 // Purpose: CS 3376
 // Description: server file containing main method. Continous server that accepts both udp/tcp sockets
-// Continous - implemented, should be tested
-// TCP - implemented, should be tested
+// Continous - implemented, seems to work
+// TCP - implemented, seems to work
 // UDP - Not implemented
 // Based very heavily on server2.c and U_server.c from http://www.linuxhowtos.org/C_C++/socket.htm
-// Comments largely based on rest of above article
+// Comments largely based on above article
+// select() used to be able to accept both udp/tcp connections
+// select() information : http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html#select
 
 /* a server in the unix domain.  The pathname of 
    the socket address is passed as an argument */
@@ -17,13 +19,27 @@
 #include <stdlib.h>
 #include <sys/un.h>
 #include <stdio.h>
+#include <iostream>
 void error(const char *);
+void dostuff(int sock);
 int main(int argc, char *argv[])
 {
    int sockfd, newsockfd, servlen, pid; //n will contain the number of characters read/written by the socket
    socklen_t clilen;
    struct sockaddr_un  cli_addr, serv_addr; //sockaddr_un contains the address of the socket - different in unix
-
+   
+   //variables for select()
+   fd_set readfds; //set containing file descriptors used for reading
+// fd_set writefds; //set containing file descriptors used for writing
+// fd_set exceptfds; //might not end up implementing
+   struct timeval tv; //used for select(), sets how long before select times out
+   tv.tv_sec = 5; //time to wait in seconds
+   tv.tv_usec = 5000000; //time to wait in microseconds - not sure why there are two of these
+   
+	FD_ZERO(&readfds); //clear everything from sets for setup
+//	FD_ZERO(writefds);
+	
+	
 
    if ((sockfd = socket(AF_UNIX,SOCK_STREAM,0)) < 0) //creates a socket with three arguments : address (unix version), what type (SOCK_STREAM, SOCK_DGRAM), protocol (default 0)
        error("creating socket"); //prints error message if socket creation fails
@@ -34,26 +50,35 @@ int main(int argc, char *argv[])
                      sizeof(serv_addr.sun_family); //stores the length of the address in servlen, for use in bind()
 					 
    if(bind(sockfd,(struct sockaddr *)&serv_addr,servlen)<0) //binds socket to address, needs 3 arguments takes socket file descriptor (sockfd), 
-															//the address it is bound to (?) cast to the type "sockaddr", and the length of the address
+															//the address it is bound to is(?) cast to the type "sockaddr", and the length of the address
        error("binding socket"); 
+	
 
    listen(sockfd,5); //listen on socket for connections, second arg is the number of connections that can be waiting while the process handles a connection (backlog list)
+   FD_SET(sockfd, &readfds); //add socket ot readfds, for use by select()
    clilen = sizeof(cli_addr);
    while(1){
-		newsockfd = accept( //accept causes process to block
-			sockfd,(struct sockaddr *)&cli_addr,&clilen); //arguments: 
-		if (newsockfd < 0) 
-			error("accepting");
-		pid = fork(); //fork another process for each connection
-		if(pid < 0) 
-			error("error on fork");
-		if(pid == 0){ //call dostuff(), which will handle all communication once a connection has been established (only processes created by fork() go here)
-			close(sockfd);
-			dostuff(newsockfd);
-			exit(0);
-		}
-		else
-			close(newsockfd); //close connection with client
+	   select(1, &readfds, NULL, NULL, &tv); //args: num_fds, fd_set *read_fds, fd_set *write_fds, fd_set *except_fds, struct timeval *timeout
+											  //timeval set to null - will never timeout || might only need to use second arg for sockets?
+	   if(FD_ISSET(sockfd, &readfds)); // if TCP connection is detected
+	   {
+			newsockfd = accept( //accept causes process to block
+				sockfd,(struct sockaddr *)&cli_addr,&clilen); //arguments: 
+			if (newsockfd < 0) 
+				error("accepting");
+			pid = fork(); //fork another process for each connection
+			if(pid < 0) 
+				error("error on fork");
+			if(pid == 0){ //call dostuff(), which will handle all communication once a connection has been established (only processes created by fork() go here)
+				close(sockfd);
+				std::cout << "child reporting for duty\n";
+				dostuff(newsockfd);
+				exit(0);		
+			}
+			else
+				close(newsockfd); //close connection with client
+			
+	   }
    }//end of while
    close(sockfd);
    return 0; //never get here
@@ -75,8 +100,8 @@ void dostuff (int sock)
 	int n; //number of characters read or written
 	char buf[80]; //buffer will be used for read/write
 	
-	n=read(newsockfd,buf,80); //only get here after successful connection with client. args: socket file descriptor, buffer to write to, max length of message (in chars)
+	n=read(sock,buf,80); //only get here after successful connection with client. args: socket file descriptor, buffer to write to, max length of message (in chars)
 	printf("A connection has been established\n");
 	write(1,buf,n); //prints out message recieved by client
-	write(newsockfd,"I got your message\n",19); //write to client
+	write(sock,"I got your message\n",19); //write to client
 }
