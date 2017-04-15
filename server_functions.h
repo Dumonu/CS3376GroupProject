@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <signal.h>
 
 void error (const char*);
 void setup_serv_addr (struct sockaddr_in &, const int);

@@ -17,9 +17,6 @@
 //  header only needed for client in the unix domain
 #include <sys/un.h>
 
-// custom header file
-#include "client.h"
-
 void error(const char *msg)
 {
 	perror(msg);

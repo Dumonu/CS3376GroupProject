@@ -15,13 +15,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h> 
+#include "client_functions.h"
 
 //Function for error
-void error(const char *msg)
-{
-    perror(msg);
-    exit(0);
-}
+//void error(const char *msg)
+//{
+//  perror(msg);
+//  exit(0);
+//}
 
 // Main function that returns an integer and takes arguments as parameters
 int main(int argc, char *argv[])
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
     struct sockaddr_in serv_addr;
     struct hostent *server;
 // All of this code is the same as that in the server so we are commenting it out.
-/*
+  
     char buffer[256];
     if (argc < 3) {
        fprintf(stderr,"usage %s hostname port\n", argv[0]);
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
 	// Make sure the socket has been opened
     if (sockfd < 0) 
         error("ERROR opening socket");
-*/
+  
 	// The variable argv[1] contains the name of a host on the internet
     server = gethostbyname(argv[1]);
     if (server == NULL) {

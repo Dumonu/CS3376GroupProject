@@ -39,6 +39,10 @@ void dostuff_stream (const int newsockfd)
 	{
 		error("ERROR writing to socket");
 	}
+    
+    //CHERRYSCODE:
+    //When child is done, send a SIGCHILD signal, with SIG_IGN to make zombie processes disappear.
+    signal(SIGCHLD, SIG_IGN);
 }
 
 void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr)
