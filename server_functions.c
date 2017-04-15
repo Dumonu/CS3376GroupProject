@@ -46,13 +46,14 @@ void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr)
 	int n;
 	char buffer[256];
 	bzero(buffer, 256);
-	n = recvfrom(sockfd, buffer, 255, 0, (struct sockaddr*) &cli_addr, (socklen_t*) sizeof(cli_addr));
+	socklen_t cli_addr_size = sizeof(cli_addr);
+	n = recvfrom(sockfd, buffer, 255, 0, (struct sockaddr*) &cli_addr, &cli_addr_size);
 	if (n < 0)
 	{
 		error("ERROR receiving from socket");
 	}
 	printf("Here is the message: %s\n", buffer);
-	n = sendto(sockfd, "I got your message", 18, 0, (struct sockaddr*) &cli_addr, (socklen_t) sizeof(cli_addr));
+	n = sendto(sockfd, "I got your message\n", 20, 0, (struct sockaddr*) &cli_addr, (socklen_t) sizeof(cli_addr));
 	if (n < 0)
 	{
 		error("ERROR sending to socket");
@@ -84,7 +85,8 @@ int create_dgram_socket ()
 int acpt (const int sockfd, struct sockaddr_in & cli_addr)
 {
 	int newsockfd;
-	newsockfd = accept(sockfd, (struct sockaddr*) &cli_addr, (socklen_t*) sizeof(cli_addr));
+	socklen_t cli_addr_size = sizeof(cli_addr);
+	newsockfd = accept(sockfd, (struct sockaddr*) &cli_addr, &cli_addr_size);
 	if (newsockfd < 0)
 	{
 		error("ERROR on accept");
