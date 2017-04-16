@@ -1,13 +1,13 @@
 #include "server_functions.h"
 
-void error(const char* msg)
+void error(const char* msg) // prints an error message and exits the program
 {
 	perror(msg);
 	exit(1);
 }
 
 
-void setup_serv_addr (struct sockaddr_in & serv_addr, const int portno)
+void setup_serv_addr (struct sockaddr_in & serv_addr, const int portno) // sets up the server adress
 {
 	bzero((char*) &serv_addr, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
@@ -15,7 +15,7 @@ void setup_serv_addr (struct sockaddr_in & serv_addr, const int portno)
 	serv_addr.sin_port = htons(portno);
 }
 
-void bind_socket (const int sockfd, const struct sockaddr_in serv_addr)
+void bind_socket (const int sockfd, const struct sockaddr_in serv_addr) // binds the socket to the port number passed on the command line
 {
 	if (bind(sockfd, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) < 0)
 	{
@@ -23,7 +23,7 @@ void bind_socket (const int sockfd, const struct sockaddr_in serv_addr)
 	}
 }
 
-void dostuff_stream (const int newsockfd)
+void dostuff_stream (const int newsockfd) // uses a stream socket to read a message from the client and send a confirmation message to the client 
 {
 	int n;
 	char buffer[256];
@@ -45,7 +45,7 @@ void dostuff_stream (const int newsockfd)
     signal(SIGCHLD, SIG_IGN);
 }
 
-void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr)
+void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr) // uses a datagram socket to read a message from the client and send a confirmation message to the client
 {
 	int n;
 	char buffer[256];
@@ -64,7 +64,7 @@ void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr)
 	}
 }
 
-int create_stream_socket ()
+int create_stream_socket () // creates a stream socket
 {
 	int sockfd;
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -75,7 +75,7 @@ int create_stream_socket ()
 	return sockfd;
 }
 	
-int create_dgram_socket ()
+int create_dgram_socket () // creates a datagram socket
 {
 	int sockfd;
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -86,7 +86,7 @@ int create_dgram_socket ()
 	return sockfd;
 }
 
-int acpt (const int sockfd, struct sockaddr_in & cli_addr)
+int acpt (const int sockfd, struct sockaddr_in & cli_addr) // accepts a client's request to connect to the server
 {
 	int newsockfd;
 	socklen_t cli_addr_size = sizeof(cli_addr);
