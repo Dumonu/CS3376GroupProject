@@ -6,6 +6,7 @@
 // Create a socket with the socket() system call
 // Connect the socket to the address of the server using the connect() system call
 // Send and receive data. There are a number of ways to do this, but the simplest is to use the read() and write() system calls.
+// The client prompts the user which type of connection they would like to make and establishes the connection accordingly
 
 #include <stdio.h>
 #include <stdlib.h>
