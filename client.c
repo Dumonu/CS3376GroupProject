@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	// char to hold the type of connection
 	char type = "";
 	// Prompt the user what type of connection they would like to make
-	printf("Would you like to make a TCP or UDP connection?"
+	printf("Would you like to make a TCP or UDP connection?");
 	// Stores the users selection into the variable type
 	scanf(%c, &type);
 	// establishes a TCP connection
