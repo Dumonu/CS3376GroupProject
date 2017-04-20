@@ -22,20 +22,20 @@
 int main(int argc, char *argv[])
 {
 	// char to hold the type of connection
-	char type = "";
+	char type[3];
 	// Prompt the user what type of connection they would like to make
 	printf("Would you like to make a TCP or UDP connection?");
 	// Stores the users selection into the variable type
-	scanf(%c, &type);
+	scanf("%s", type);
 	// establishes a TCP connection
-	if(type == "TCP")
+	if(strcmp(type,"TCP")== 0)
 	{
-		connectTCP(argc, argv);
+		connectTCP(argc, *argv);
 	}
 	// establishes a UDP connection
-	else if(type == "UDP")
+	else if(strcmp(type,"UDP") == 0)
 	{
-		connectUDP(argc, argv);
+		connectUDP(argc, *argv);
 	}
  	   return 0;
 }
