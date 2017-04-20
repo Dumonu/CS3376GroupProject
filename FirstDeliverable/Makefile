@@ -18,7 +18,7 @@ client : $(CLIENTOBJS)
 client.o : client.c
 	$(CC) -c client.c
 client_functions.o : client_functions.c
-	$(CC) -c client_functions.c client_functions.h
+	$(CC) -c client_functions.c
 server.o : server.c
 	$(CC) -c server.c
 server_functions.o : server_functions.c server_functions.h
