@@ -1,0 +1,19 @@
+# CS3376GroupProject
+# Contributors: Adrian Rivera-Zayas, Devon Hayworth, Ryan Corcoran, Henry Tran, Jacob Cherry, Ian Llewellyn
+# Second deliverable: echo_c.c, echo_c_functions.c, echo_c_functions.h, echo_s.c, echo_s_functions.c, echo_s_functions.h, log_s.c, log_s_functions.c, log_s_functions.h, echo.log
+# Defined functionality:
+# echo_s:
+#   a. replies to any client connected to one of its ports with the same message it receives
+#   b. supports both TCP and UDP connections
+#   c. accepts messages on multiple well-known port numbers, specified by the command line
+#   d. creates a process for each client
+#   e. communicates with log_s in UDP using port 9999
+# log_s
+#   a. logs information from echo_s in a file called "echo.log"
+#   b. logs the IP address, timestamp, and message
+#   c. communicates with client_s in UDP using port 9999
+# Adrian: echo client
+# Ian: log server
+# Ryan: readme
+# Devon: makefile
+# Henry: echo server
