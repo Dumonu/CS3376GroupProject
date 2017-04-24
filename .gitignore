@@ -27,3 +27,8 @@
 *.exe
 *.out
 *.app
+
+*.log
+echo_c
+echo_s
+log_s

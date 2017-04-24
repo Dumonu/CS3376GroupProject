@@ -104,22 +104,28 @@ int connectTCP(int argc, char *argv[])
 {
 	// Initialize Variables
 	int sockfd, servlen,n;
-	struct sockaddr_un  serv_addr;
+	struct sockaddr_in  serv_addr;
 	char buffer[82];
 
 	// Set fields in serv_addr
 	bzero((char *)&serv_addr,sizeof(serv_addr));
 
 	//  Specify that it is an Unix domain
-	serv_addr.sun_family = AF_UNIX;
+	serv_addr.sin_family = AF_INET;
 	
 	// Copy user-inputted path
-	strcpy(serv_addr.sun_path, argv[1]);
+    serv_addr.sin_port = atoi(argv[2]);
+    struct hostent *hp = gethostbyname(argv[1]);
+    if (hp == 0)
+    {
+        error("Unknown host");
+    }
+    bcopy((char *)hp->h_addr, (char *)&serv_addr.sin_addr, hp->h_length);
 
 	// Length of server path
-	servlen = strlen(serv_addr.sun_path) + sizeof(serv_addr.sun_family);
+    servlen = sizeof(struct sockaddr_in);
 
-	if ((sockfd = socket(AF_UNIX, SOCK_STREAM,0)) < 0)// means error in creating socket
+	if ((sockfd = socket(AF_INET, SOCK_STREAM,0)) < 0)// means error in creating socket
 	{
 		error("Creating socket");
 	}
@@ -129,7 +135,7 @@ int connectTCP(int argc, char *argv[])
 	// Function returns 0 on success, -1 on failure
 	if (connect(sockfd, (struct sockaddr *)&serv_addr, servlen) < 0)
 	{
-		error("Connecting");
+		error("echo_c: Connecting");
 	}
 
 	// Prompts the user to enter a message
