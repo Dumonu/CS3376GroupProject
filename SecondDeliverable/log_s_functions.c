@@ -43,9 +43,7 @@ void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr) // uses a d
 		error("ERROR sending to socket");
 	}
 	
-	//CHERRYSCODE:
-    //When child is done, send a SIGCHILD signal, with SIG_IGN to make zombie processes disappear.
-    signal(SIGCHLD, SIG_IGN);
+	// There used to be an incorrect call to signal() here. At the time, Cherry did not know what signal() does. He does now.
 }
 	
 int create_dgram_socket () // creates a datagram socket

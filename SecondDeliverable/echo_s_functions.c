@@ -57,10 +57,7 @@ void dostuff_stream (const int newsockfd) // uses a stream socket to read a mess
       if (err < 0) error("Client write failed\n");
     }
 	
-	
-    //CHERRYSCODE:
-    //When child is done, send a SIGCHILD signal, with SIG_IGN to make zombie processes disappear.
-    signal(SIGCHLD, SIG_IGN);
+	// There used to be an incorrect call to signal() here. At the time, Cherry did not know what signal() does. He does now.
 }
 
 void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr) // uses a datagram socket to read a message from the client and send a confirmation message to the client (UDP)

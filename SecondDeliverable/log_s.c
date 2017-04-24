@@ -22,6 +22,8 @@
 #include "log_s_functions.h"
 int main(int argc, char *argv[])
 {
+    //ignore child signals, allow children to die properly.
+    signal(SIGCHLD, SIG_IGN);
 	
 	int portno = 9999;
    

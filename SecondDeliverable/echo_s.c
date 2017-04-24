@@ -26,6 +26,8 @@
 #include "echo_s_functions.h"
 int main(int argc, char *argv[])
 {
+    // ignore Child signals.
+    signal(SIGCHLD, SIG_IGN);
 	//if input is not formatted correctly, print correct input formatting and exit
 	if(argc < 2 || argc > 2)
 	{
