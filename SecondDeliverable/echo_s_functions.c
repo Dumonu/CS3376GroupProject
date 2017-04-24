@@ -16,6 +16,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/un.h>
+#include <time.h>
 
 void error(const char* msg) // prints an error message and exits the program
 {
@@ -40,7 +42,7 @@ void bind_socket (const int sockfd, const struct sockaddr_in serv_addr) // binds
 	}
 }
 
-void dostuff_stream (const int newsockfd) // uses a stream socket to read a message from the client and send a confirmation message to the client (TCP)
+void dostuff_stream (const int newsockfd, struct sockaddr_in &cli_addr) // uses a stream socket to read a message from the client and send a confirmation message to the client (TCP)
 {
 	int err;
 	char buffer[256];
@@ -52,6 +54,7 @@ void dostuff_stream (const int newsockfd) // uses a stream socket to read a mess
 
       if (!read) break; // done reading
       if (read < 0) error("Client read failed\n");
+      logTCP(inet_ntoa(cli_addr.sin_addr), buffer);
       // writes to the client
       err = send(newsockfd, buffer, read, 0);
       if (err < 0) error("Client write failed\n");
@@ -86,9 +89,11 @@ void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr) // uses a d
       } else {
         printf("GOT %d BYTES\n",n);
         /* Got something, just send it back (echos)*/
+        logTCP(inet_ntoa(remote.sin_addr), buffer);
         sendto(sockfd,buffer,n,0,(struct sockaddr *)&remote,len);
       }
     }
+
 }
 
 int create_stream_socket () // creates a stream socket
@@ -123,4 +128,60 @@ int acpt (const int sockfd, struct sockaddr_in & cli_addr) // accepts a client's
 		error("ERROR on accept");
 	}
 	return newsockfd;
+}
+
+int logTCP(char *cip, char *msg)
+{
+    // Initialize Variables
+    int sockfd, servlen, n;
+    struct sockaddr_un serv_addr;
+    char buffer[123];
+
+    // Set fields in serv_addr
+    bzero((char *)&serv_addr,sizeof(serv_addr));
+
+    // Specify that it is an Unix domain
+    serv_addr.sun_family = AF_UNIX;
+
+    // set destination;
+    strcpy(serv_addr.sun_path, "localhost:9999");
+
+    // Length of server path
+    servlen = strlen(serv_addr.sun_path) + sizeof(serv_addr.sun_family);
+
+    if((sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) // error in creating socket
+    {
+        error("Creating Socket");
+    }
+
+    // Connects the socket to the address of the server using the connect() system call.
+    // Takes 3 arguments: the socket file descriptor, the host address that it wants to connect to, and the size of the add
+    // Function returns 0 on success, -1 on failure
+    if(connect(sockfd, (struct sockaddr *)&serv_addr, servlen) < 0)
+    {
+        error("Connecting");
+    }
+    
+    // Set the message to the log server.
+    bzero(buffer, 123);
+    strcat(buffer, cip);
+    strcat(buffer, " ");
+    time_t result = time(NULL);
+    strcat(buffer, asctime(localtime(&result)));
+    strcat(buffer, " ");
+    strcat(buffer, msg);
+
+    printf("%s", buffer);
+
+    // Send data using the write() system call to write to the socket
+    n = write(sockfd,buffer,strlen(buffer));
+    if (n < 0)
+    {
+        error("ERROR writing to socket");
+    }
+
+    // Close socket
+    close(sockfd);
+    return 0;
+
 }

@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 				error("error on fork");
 			if(pid == 0){ //call dostuff(), which will handle all communication once a connection has been established (only processes created by fork() go here)
 				close(sockfd);
-				dostuff_stream(newsockfd); //all communication with client is here
+				dostuff_stream(newsockfd, cli_addr); //all communication with client is here
 				exit(0);		
 			}
 			else
