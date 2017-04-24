@@ -177,7 +177,7 @@ int logUDP(char *cip, char *msg)
     strcat(buffer, " ");
     strcat(buffer, msg);
 
-    printf("%s", buffer);
+    //printf("%s", buffer);
 
     n = sendto(sock,buffer, strlen(buffer), 0, (const struct sockaddr *)&server, length);
     if (n < 0)
