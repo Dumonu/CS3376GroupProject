@@ -30,12 +30,12 @@ int main(int argc, char *argv[])
 	// establishes a TCP connection
 	if(strcmp(type,"TCP")== 0)
 	{
-		connectTCP(argc, *argv);
+		connectTCP(argc, argv);
 	}
 	// establishes a UDP connection
 	else if(strcmp(type,"UDP") == 0)
 	{
-		connectUDP(argc, *argv);
+		connectUDP(argc, argv);
 	}
  	   return 0;
 }
