@@ -18,6 +18,6 @@ void dostuff_dgram (const int, struct sockaddr_in &);
 int create_stream_socket ();
 int create_dgram_socket ();
 int acpt (const int, struct sockaddr_in &);
-int logTCP(char*, char*);
+int logUDP(char*, char*);
 
 #endif
