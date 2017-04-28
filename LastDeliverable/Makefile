@@ -26,4 +26,4 @@ log_s.o : log_s.c
 log_s_functions.o : log_s_functions.c log_s_functions.h
 	$(CC) -c $(CFLAGS) log_s_functions.c
 clean :
-	rm -f $(SERVOBJS) $(CLIOBS) $(LOGOBJS) $(PROGS) *.o
+	rm -f core $(SERVOBJS) $(CLIOBS) $(LOGOBJS) $(PROGS)
