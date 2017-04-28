@@ -28,6 +28,7 @@
 int main(int argc, char *argv[])
 {
     unsigned long logip = INADDR_ANY;
+    int logport = 9999;
     // ignore Child signals.
     signal(SIGCHLD, SIG_IGN);
 	//if input is not formatted correctly, print correct input formatting and exit
@@ -36,14 +37,26 @@ int main(int argc, char *argv[])
 		std::cout<< "usage: ./server portno\n";
 		exit(0);
 	}
-	if(argc > 2)
+	for(int i = 2; i < (argc - 1); i += 2)
 	{
-		if(argv[2] == "-logip")
+		if(strcmp(argv[i], "-logip") == 0)
 		{
-			logip = inet_addr(argv[3]);
+			logip = inet_addr(argv[i + 1]);
+		}
+		else
+		{
+			if(strcmp(argv[i], "-logport") == 0)
+			{
+				logport = atoi(argv[i + 1]);
+			}
+			else
+			{
+				std::cout << "usage: ./echo_s portno -logip logipaddr -logport logportno\n";
+				exit(0);
+			}
 		}
 	}
-	
+
 	int sockfd, newsockfd, servlen, pid, portno; //n will contain the number of characters read/written by the socket
 	struct sockaddr_in  cli_addr, serv_addr; //sockaddr_in contains the port for the socket
 	portno = atoi(argv[1]);
@@ -92,7 +105,7 @@ int main(int argc, char *argv[])
 				error("error on fork");
 			if(pid == 0){ //call dostuff(), which will handle all communication once a connection has been established (only processes created by fork() go here)
 				close(sockfd);
-				dostuff_stream(newsockfd, cli_addr, logip); //all communication with client is here
+				dostuff_stream(newsockfd, cli_addr, logip, logport); //all communication with client is here
 				exit(0);		
 			}
 			else
@@ -101,7 +114,7 @@ int main(int argc, char *argv[])
 		//UDP
 		if(FD_ISSET(sock, &readfds)) //if there is data to be read on the datagram socket8
 		{
-			dostuff_dgram(sock, from, logip);
+			dostuff_dgram(sock, from, logip, logport);
 		}
 	}//end of while
 	close(sockfd);

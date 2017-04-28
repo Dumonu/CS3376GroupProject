@@ -146,12 +146,12 @@ int connectTCP(int argc, char *argv[])
 	}
 
 	// Prompts the user to enter a message
-	printf("Please enter your message: \n");
+	// printf("Please enter your message: \n");
+	write(1, "Please enter the message: ", 26);
 	bzero(buffer,82);
-	read(0, buffer, 81);
 
-	// Uses fgets to read the message from stdin
-	fgets(buffer,80,stdin);
+	// Uses read to read the message from stdin
+	read(0, buffer, 81);
 
 	// Send data using the write() system call to write to the socket
 	write(sockfd,buffer,strlen(buffer));

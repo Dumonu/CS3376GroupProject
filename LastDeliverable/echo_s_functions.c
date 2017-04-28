@@ -43,7 +43,7 @@ void bind_socket (const int sockfd, const struct sockaddr_in serv_addr) // binds
 	}
 }
 
-void dostuff_stream (const int newsockfd, struct sockaddr_in &cli_addr, unsigned long logip) // uses a stream socket to read a message from the client and send a confirmation message to the client (TCP)
+void dostuff_stream (const int newsockfd, struct sockaddr_in &cli_addr, unsigned long logip, int logport) // uses a stream socket to read a message from the client and send a confirmation message to the client (TCP)
 {
 	int err;
 	char buffer[256];
@@ -55,7 +55,7 @@ void dostuff_stream (const int newsockfd, struct sockaddr_in &cli_addr, unsigned
 
       if (!read) break; // done reading
       if (read < 0) error("Client read failed\n");
-      logUDP(inet_ntoa(cli_addr.sin_addr), buffer, logip);
+      logUDP(inet_ntoa(cli_addr.sin_addr), buffer, logip, logport);
       // writes to the client
       err = send(newsockfd, buffer, read, 0);
       if (err < 0) error("Client write failed\n");
@@ -64,7 +64,7 @@ void dostuff_stream (const int newsockfd, struct sockaddr_in &cli_addr, unsigned
 	// There used to be an incorrect call to signal() here. At the time, Cherry did not know what signal() does. He does now.
 }
 
-void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr, unsigned long logip) // uses a datagram socket to read a message from the client and send a confirmation message to the client (UDP)
+void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr, unsigned long logip, int logport) // uses a datagram socket to read a message from the client and send a confirmation message to the client (UDP)
 {
 	int len, n;
     char buffer[256];
@@ -90,7 +90,7 @@ void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr, unsigned lo
       } else {
         printf("GOT %d BYTES\n",n);
         /* Got something, just send it back (echos)*/
-        logUDP(inet_ntoa(remote.sin_addr), buffer, logip);
+        logUDP(inet_ntoa(remote.sin_addr), buffer, logip, logport);
         sendto(sockfd,buffer,n,0,(struct sockaddr *)&remote,len);
       }
     }
@@ -131,13 +131,12 @@ int acpt (const int sockfd, struct sockaddr_in & cli_addr) // accepts a client's
 	return newsockfd;
 }
 
-int logUDP(char *cip, char *msg, unsigned long logip)
+int logUDP(char *cip, char *msg, unsigned long logip, int logport)
 {
     // Initialize Variables
     int sock, n;
     unsigned int length;
     struct sockaddr_in server, from;
-    struct hostent *hp;
     char buffer[256];
 
     // Creating the socket
@@ -152,18 +151,8 @@ int logUDP(char *cip, char *msg, unsigned long logip)
     // Specify that it is an Internet domain
     server.sin_family = AF_INET;
 
-    // get localhost
-    hp = gethostbyname("localhost");
-    if (hp == 0) // means incorrect host name
-    {
-        error("Unknown host");
-    }
-    
-    // Have to use the function bcopy because server->h_addr is a character string
-    bcopy((char *)hp->h_addr, (char *)&server.sin_addr, hp->h_length);
-
     // Get port number
-    server.sin_port = htons(9999);
+    server.sin_port = htons(logport);
 
     // Get log ip adress
     server.sin_addr.s_addr = logip;
