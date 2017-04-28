@@ -121,7 +121,7 @@ int connectTCP(int argc, char *argv[])
 	serv_addr.sin_family = AF_INET;
 	
 	// Copy user-inputted path
-    	serv_addr.sin_port = atoi(argv[2]);
+    	serv_addr.sin_port = htons(atoi(argv[2]));
     	hp = gethostbyname(argv[1]);
     	if (hp == 0)
     	{
@@ -146,8 +146,9 @@ int connectTCP(int argc, char *argv[])
 	}
 
 	// Prompts the user to enter a message
-	printf("Please enter your message: ");
+	printf("Please enter your message: \n");
 	bzero(buffer,82);
+	read(0, buffer, 81);
 
 	// Uses fgets to read the message from stdin
 	fgets(buffer,80,stdin);
@@ -165,7 +166,8 @@ int connectTCP(int argc, char *argv[])
 		error("ERROR reading from socket");
 	}
 	// Displaying reply on screen
-	printf("Echo from server: \n");
+	//printf("Echo from server: \n");
+	write(1,"Echo from server: ", 18);
 	write(1,buffer,n);
 
 	// Closing socket
