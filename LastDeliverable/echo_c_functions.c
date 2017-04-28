@@ -71,11 +71,11 @@ int connectUDP(int argc, char *argv[])
 	length=sizeof(struct sockaddr_in);
 
 	// Ask user to input message to be sent
-	printf("Please enter the message: ");
+	write(1, "Please enter the message: ", 26);
 
 	// Receive input
 	bzero(buffer,256);
-	fgets(buffer,255,stdin);
+	read(0, buffer, 255);
 
 	// Send to internet server
 	n=sendto(sock,buffer, strlen(buffer), 0, (const struct sockaddr *)&server, length);
@@ -92,7 +92,7 @@ int connectUDP(int argc, char *argv[])
 	}
 
 	// Acknowledge data received successfully
-	write(1,"Echo from server: ",12);
+	write(1,"Echo from server: ",18);
 	write(1,buffer,n);
 
 	// Close socket
@@ -103,27 +103,34 @@ int connectUDP(int argc, char *argv[])
 int connectTCP(int argc, char *argv[])
 {
 	// Initialize Variables
-	int sockfd, servlen,n;
+	int sockfd, n;
+	unsigned int servlen;
 	struct sockaddr_in  serv_addr;
+	struct hostent *hp;
 	char buffer[82];
 
+	if (argc != 3) 
+	{
+		printf("Usage: server port\n");
+		exit(1);
+	}	
 	// Set fields in serv_addr
 	bzero((char *)&serv_addr,sizeof(serv_addr));
 
-	//  Specify that it is an Unix domain
+	//  Specify that it is an Internet domain
 	serv_addr.sin_family = AF_INET;
 	
 	// Copy user-inputted path
-    serv_addr.sin_port = atoi(argv[2]);
-    struct hostent *hp = gethostbyname(argv[1]);
-    if (hp == 0)
-    {
-        error("Unknown host");
-    }
-    bcopy((char *)hp->h_addr, (char *)&serv_addr.sin_addr, hp->h_length);
+    	serv_addr.sin_port = atoi(argv[2]);
+    	hp = gethostbyname(argv[1]);
+    	if (hp == 0)
+    	{
+        	error("Unknown host");
+    	}
+    	bcopy((char *)hp->h_addr, (char *)&serv_addr.sin_addr, hp->h_length);
 
 	// Length of server path
-    servlen = sizeof(struct sockaddr_in);
+        servlen = sizeof(struct sockaddr_in);
 
 	if ((sockfd = socket(AF_INET, SOCK_STREAM,0)) < 0)// means error in creating socket
 	{

@@ -23,16 +23,25 @@
 #include <iostream>
 #include <string.h>
 #include <netdb.h>
+#include <arpa/inet.h>
 #include "echo_s_functions.h"
 int main(int argc, char *argv[])
 {
+    unsigned long logip = INADDR_ANY;
     // ignore Child signals.
     signal(SIGCHLD, SIG_IGN);
 	//if input is not formatted correctly, print correct input formatting and exit
-	if(argc < 2 || argc > 2)
+	if(argc < 2)
 	{
 		std::cout<< "usage: ./server portno\n";
 		exit(0);
+	}
+	if(argc > 2)
+	{
+		if(argv[2] == "-logip")
+		{
+			logip = inet_addr(argv[3]);
+		}
 	}
 	
 	int sockfd, newsockfd, servlen, pid, portno; //n will contain the number of characters read/written by the socket
@@ -50,7 +59,7 @@ int main(int argc, char *argv[])
 	//TCP setup - create, set server address variables, bind to port
 	sockfd = create_stream_socket();	
 	setup_serv_addr(serv_addr, portno);					 
-    bind_socket(sockfd, serv_addr);									
+        bind_socket(sockfd, serv_addr);									
         	  
 	//UDP setup
 	struct sockaddr_in server;
@@ -83,7 +92,7 @@ int main(int argc, char *argv[])
 				error("error on fork");
 			if(pid == 0){ //call dostuff(), which will handle all communication once a connection has been established (only processes created by fork() go here)
 				close(sockfd);
-				dostuff_stream(newsockfd, cli_addr); //all communication with client is here
+				dostuff_stream(newsockfd, cli_addr, logip); //all communication with client is here
 				exit(0);		
 			}
 			else
@@ -92,7 +101,7 @@ int main(int argc, char *argv[])
 		//UDP
 		if(FD_ISSET(sock, &readfds)) //if there is data to be read on the datagram socket8
 		{
-			dostuff_dgram(sock, from);
+			dostuff_dgram(sock, from, logip);
 		}
 	}//end of while
 	close(sockfd);
