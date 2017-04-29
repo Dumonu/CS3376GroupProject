@@ -31,6 +31,9 @@ int main(int argc, char *argv[])
     int logport = 9999;
     // ignore Child signals.
     signal(SIGCHLD, SIG_IGN);
+    // send message on interrupt signals
+    signal(SIGINT, interruptHandler);
+
 	//if input is not formatted correctly, print correct input formatting and exit
 	if(argc < 2)
 	{
@@ -56,6 +59,9 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
+
+    LOGIP = logip;
+    LOGPORT = logport;
 
 	int sockfd, newsockfd, servlen, pid, portno; //n will contain the number of characters read/written by the socket
 	struct sockaddr_in  cli_addr, serv_addr; //sockaddr_in contains the port for the socket

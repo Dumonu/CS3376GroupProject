@@ -17,4 +17,6 @@ void dostuff_dgram (const int, struct sockaddr_in &);
 void write_to_file (const char*);
 int create_dgram_socket ();
 
+void term(int);
+
 #endif

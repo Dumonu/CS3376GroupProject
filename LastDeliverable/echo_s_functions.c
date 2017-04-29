@@ -20,6 +20,8 @@
 #include <time.h>
 #include <netdb.h>
 
+
+
 void error(const char* msg) // prints an error message and exits the program
 {
 	perror(msg);
@@ -182,4 +184,48 @@ int logUDP(char *cip, char *msg, unsigned long logip, int logport)
     close(sock);
     return 0;
 
+}
+
+void interruptHandler(int signum)
+{
+    // Initialize Variables
+    int sock, n;
+    unsigned int length;
+    struct sockaddr_in server, from;
+    char *buffer = "echo_s is stopping";
+
+    // Creating the socket
+    // Pass internet domain, datagram socket, and 0 for protocol
+    sock = socket(AF_INET, SOCK_DGRAM, 0);
+
+    if (sock < 0) // means port number not passed
+    {
+        error("socket");
+    }
+
+    // Specify that it is an Internet domain
+    server.sin_family = AF_INET;
+
+    // Get port number
+    server.sin_port = htons(LOGPORT);
+
+    // Get log ip adress
+    server.sin_addr.s_addr = LOGIP;
+
+    // Size of internet address
+    length = sizeof(struct sockaddr_in);
+    
+    //printf("%s", buffer);
+
+    n = sendto(sock,buffer, strlen(buffer), 0, (const struct sockaddr *)&server, length);
+    if (n < 0)
+    {
+        error("Sendto");
+    }
+
+
+    // Close socket
+    close(sock);
+    
+    exit(0);
 }
