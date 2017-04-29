@@ -26,7 +26,18 @@ int main(int argc, char *argv[])
     signal(SIGCHLD, SIG_IGN);
 	
 	int portno = 9999;
-   
+   	// for the user3 implementation of port argument
+   	if(argc >= 2)
+	{
+		for(int i = 2; i < (argc - 1); i += 2)
+		{
+			if(strcmp(argv[i], "-port") == 0)
+			{
+				portno = atoi(argv[i + 1]);
+			}
+		}
+	}
+	
 	//variables for select()
 	fd_set readfds; //set containing file descriptors used for reading
 	fd_set master;	//for select() - reset every loop for select() to be able to detect new connections
