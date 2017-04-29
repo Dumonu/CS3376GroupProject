@@ -10,6 +10,9 @@
 #include <netinet/in.h>
 #include <signal.h>
 
+extern unsigned long LOGIP;
+extern int LOGPORT;
+
 void error (const char*);
 void setup_serv_addr (struct sockaddr_in &, const int);
 void bind_socket (const int, const struct sockaddr_in);
@@ -19,5 +22,7 @@ int create_stream_socket ();
 int create_dgram_socket ();
 int acpt (const int, struct sockaddr_in &);
 int logUDP(char*, char*, unsigned long, int);
+
+void interruptHandler(int);
 
 #endif

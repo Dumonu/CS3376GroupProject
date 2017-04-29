@@ -35,13 +35,18 @@ void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr) // uses a d
 	{
 		error("ERROR receiving from socket");
 	}
+
+
 //	printf("Here is the message: %s\n", buffer);
 //	n = sendto(sockfd, "I got your message\n", 20, 0, (struct sockaddr*) &cli_addr, (socklen_t) sizeof(cli_addr));
+    if(strcmp(buffer, "echo_s is stopping") == 0)
+    {
+        // stop server
+        printf("%s\n", "log_s is stopping");
+        kill(getppid(), SIGTERM);
+        exit(0);
+    }
 	write_to_file(buffer);
-	if (n < 0)
-	{
-		error("ERROR sending to socket");
-	}
 	
 	// There used to be an incorrect call to signal() here. At the time, Cherry did not know what signal() does. He does now.
 }
@@ -68,4 +73,10 @@ void write_to_file(const char* buffer) //print the recieved message to echo.log
 	/* print some text */
 	fprintf(f, "Some text: %s", buffer); //print to the file
 
+}
+
+void term(int signum)
+{
+    kill(0, SIGTERM);
+    exit(0);
 }
