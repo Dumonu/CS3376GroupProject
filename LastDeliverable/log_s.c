@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
     signal(SIGCHLD, SIG_IGN);
     signal(SIGTERM, term);
 
-    printf("log_s parent pgid: %d\n", getpgid(0));
 	
 	int portno = 9999;
    	// for the user3 implementation of port argument
