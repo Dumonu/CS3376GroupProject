@@ -15,11 +15,11 @@ User 3: Henry Tran
 Modified the “log_s” code so that an additional argument is passed to indicate
 what port address it should listen on.
 
-User 4: Jacob
+User 4: Jacob Cherry
 Modified both “echo_s” and “log_s” code so that “echo_s” will send a special
 message “echo_s is stopping” when the “echo_s” is stopped with “ctrl+c”. “log_s” does not log this message, but rather terminates. 
 
-User 5: Ian
+User 5: Ian Llewellyn
 Modified the “log_s” code so that it will log the special message “echo_s is
 stopping” when it receives it from the server, then terminate.
 
