@@ -1,30 +1,31 @@
-Semester Project Group 5
-Class: C/C++ Programming in a UNIX Environment
-Section: SE 3376.502
-Last Deliverable
-Due Date: 4/30/2017
-Github Repo Link: "https://github.com/Dumonu/CS3376GroupProject"
-
-User 1: Devon Hayworth
-Modified the “echo_s” code so that an argument is passed to indicate what IP address
-the log server is running at.
-
-User 2: Ryan Corcoran
-Modified the “echo_s” code so that an additional argument is passed to indicate what
-port address the log server is running at. 
-
-User 3: Henry Tran
-Modified the “log_s” code so that an additional argument is passed to indicate
-what port address it should listen on.
-
-User 4: Jacob Cherry
-Modified both “echo_s” and “log_s” code so that “echo_s” will send a special
-message “echo_s is stopping” when the “echo_s” is stopped with “ctrl+c”. “log_s” does not log this message, but rather terminates. 
-
-User 5: Ian Llewellyn
-Modified the “log_s” code so that it will log the special message “echo_s is
-stopping” when it receives it from the server, then terminate.
-
-User 6: Adrian Rivera-Zayas
-Modified the “Readme” with all the changes that were made by all the users. Documented what each user did. The Readme also has the name of the github repo. 
-Verified that the code works, and that it is well documented.
+# Semester Project Group 5
+# Class: C/C++ Programming in a UNIX Environment
+# Section: SE 3376.502
+# Last Deliverable
+# Due Date: 4/30/2017
+# Github Repo Link: "https://github.com/Dumonu/CS3376GroupProject"
+#
+# User 1: Devon Hayworth
+# Modified the “echo_s” code so that an argument is passed to indicate what IP address
+# the log server is running at.
+# 
+# User 2: Ryan Corcoran
+# Modified the “echo_s” code so that an additional argument is passed to indicate what
+# port address the log server is running at. 
+# 
+# User 3: Henry Tran
+# Modified the “log_s” code so that an additional argument is passed to indicate
+# what port address it should listen on.
+# 
+# User 4: Jacob Cherry
+# Modified both “echo_s” and “log_s” code so that “echo_s” will send a special
+# message “echo_s is stopping” when the “echo_s” is stopped with “ctrl+c”. “log_s” does not log this message, but rather terminates. 
+# 
+# User 5: Ian Llewellyn
+# Modified the “log_s” code so that it will log the special message “echo_s is
+# stopping” when it receives it from the server, then terminate.
+# 
+# User 6: Adrian Rivera-Zayas
+# Modified the “Readme” with all the changes that were made by all the users. Documented what each user did. The Readme also has the name of the github repo. 
+# Verified that the code works, and that it is well documented.
+# 
