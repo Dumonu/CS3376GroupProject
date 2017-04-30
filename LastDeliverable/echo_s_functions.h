@@ -10,8 +10,8 @@
 #include <netinet/in.h>
 #include <signal.h>
 
-extern unsigned long LOGIP = INADDR_ANY;
-extern int LOGPORT = 9999;
+extern unsigned long LOGIP;
+extern int LOGPORT;
 
 void error (const char*);
 void setup_serv_addr (struct sockaddr_in &, const int);

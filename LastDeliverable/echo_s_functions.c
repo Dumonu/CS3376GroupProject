@@ -20,6 +20,8 @@
 #include <time.h>
 #include <netdb.h>
 
+unsigned long LOGIP = INADDR_ANY;
+int LOGPORT = 9999;
 
 
 void error(const char* msg) // prints an error message and exits the program
