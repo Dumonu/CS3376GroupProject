@@ -43,6 +43,7 @@ void dostuff_dgram (const int sockfd, struct sockaddr_in & cli_addr) // uses a d
     {
         // stop server
         printf("%s\n", "log_s is stopping");
+	write_to_file("echo_s is stopping");
         kill(getppid(), SIGTERM);
         exit(0);
     }

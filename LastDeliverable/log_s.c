@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
 	
 	int portno = 9999;
    	// for the user3 implementation of port argument
-   	if(argc >= 2)
+   	if(argc >= 1)
 	{
-		for(int i = 2; i < (argc - 1); i += 2)
+		for(int i = 1; i < (argc - 1); i += 2)
 		{
 			if(strcmp(argv[i], "-port") == 0)
 			{
